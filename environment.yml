@@ -20,3 +20,4 @@ dependencies:
   - pip: 
     - cupy-cuda12x
     - mpl_toolkits.mplot3d
+    - scipy

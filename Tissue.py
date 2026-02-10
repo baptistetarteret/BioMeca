@@ -1,8 +1,8 @@
 import numpy as np
-import string
+
 
 class Tissue:
-    def __init__(self, name : string,  Center : np.array[float], Radius : float, absorption_coefficients : float, refractive_index : float):
+    def __init__(self, name: str, Center: np.ndarray, Radius: float, absorption_coefficients: float, refractive_index: float):
         self.Center = Center
         self.Radius = Radius
         self.name = name
