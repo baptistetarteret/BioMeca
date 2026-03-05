@@ -732,6 +732,9 @@ def simu_thermique(data_file):
             n_frames=40,
         )
     
+    eff = compute_efficiency_2d(controller.mesh_2d.nodes, controller.mesh_2d.node_tissue, snapshots, T_injury=46.0, T_lethal=60.0, tumor_name="tumor", healthy_name="brain")
+    print("Efficiency :", eff)
+    
     base_path = f"results/thermal_{n_sources}_{frequency}_{alpha}.gif"
     save_path = base_path
 
