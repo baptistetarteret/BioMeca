@@ -7,6 +7,7 @@ from scipy.optimize import differential_evolution
 from scipy.sparse import lil_matrix, csr_matrix
 from Tissue import Tissue
 from meshing_2d import Mesh2D
+from efficiency import compute_efficiency_2d
 import Physique
 
 # --- Fonction de coût picklable (module-level requis par multiprocessing) ---
@@ -562,9 +563,9 @@ class BioMecaController:
 controller = BioMecaController()
 
 # Tissus concentriques  (optique : mu_a [m⁻¹], n_r ; thermique : rho [kg/m³], cp [J/kg/K], k [W/m/K])
-controller.add_tissue("skull", [0, 0, 0],        0.15, 0.3, 1.8, density=1900.0, specific_heat=1300.0, thermal_conductivity=0.40 * 10)
-controller.add_tissue("brain", [0, 0, 0],        0.12, 0.1, 1.5, density=1040.0, specific_heat=3700.0, thermal_conductivity=0.50 * 10)
-controller.add_tissue("tumor", [0.03, 0.03, 0],  0.02, 0.8, 1.6, density=1050.0, specific_heat=3800.0, thermal_conductivity=0.55 * 10)
+controller.add_tissue("skull", [0, 0, 0],        0.019, 0.0118, 1.4, density=1908.0, specific_heat=1313.0, thermal_conductivity=0.32)
+controller.add_tissue("brain", [0, 0, 0],        0.012, 0.0041, 1.4, density=1040.0, specific_heat=3250.0, thermal_conductivity=0.51)
+controller.add_tissue("tumor", [0.03, 0.03, 0],  0.002, 0.0200, 1.4, density=1040.0, specific_heat=3250.0, thermal_conductivity=0.51)
 
 # Maillage 2D
 mesh_2d = controller.create_mesh_2d(N=6000)
@@ -730,6 +731,9 @@ def simu_thermique(data_file):
             T_body=37.0,
             n_frames=40,
         )
+    
+    eff = compute_efficiency_2d(controller.mesh_2d.nodes, controller.mesh_2d.node_tissue, snapshots, T_injury=46.0, T_lethal=60.0, tumor_name="tumor", healthy_name="brain")
+    print("Efficiency :", eff)
     
     base_path = f"results/thermal_{n_sources}_{frequency}_{alpha}.gif"
     save_path = base_path
